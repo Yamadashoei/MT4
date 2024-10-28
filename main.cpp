@@ -23,35 +23,34 @@ Vector3 Normalize(const Vector3& v) {
 }
 
 Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle) {
-
-
-	//資料p20を参考に中身を埋める。nはaxisのこと
 	float cos = std::cos(angle);
 	float sin = std::sin(angle);
 
 	Matrix4x4 rotateMatrix = {};
-	rotateMatrix.m[0][0] =
-		rotateMatrix.m[0][1] =
-		rotateMatrix.m[0][2] =
-		rotateMatrix.m[0][3] =
 
-		rotateMatrix.m[1][0] =
-		rotateMatrix.m[1][1] =
-		rotateMatrix.m[1][2] =
-		rotateMatrix.m[1][3] =
+	rotateMatrix.m[0][0] = axis.x * axis.x * (1.0f - cos) + cos;
+	rotateMatrix.m[0][1] = axis.x * axis.z * (1.0f - cos) + axis.y * sin;
+	rotateMatrix.m[0][2] = axis.x * axis.y * (1.0f - cos) - axis.z * sin;
+	rotateMatrix.m[0][3] = 0.0f;
 
-		rotateMatrix.m[2][0] =
-		rotateMatrix.m[2][1] =
-		rotateMatrix.m[2][2] =
-		rotateMatrix.m[2][3] =
+	rotateMatrix.m[1][0] = axis.y * axis.z * (1.0f - cos) - axis.x * sin;
+	rotateMatrix.m[1][1] = axis.y * axis.y * (1.0f - cos) + cos;
+	rotateMatrix.m[1][2] = axis.y * axis.x * (1.0f - cos) + axis.z * sin;
+	rotateMatrix.m[1][3] = 0.0f;
 
-		rotateMatrix.m[3][0] =
-		rotateMatrix.m[3][1] =
-		rotateMatrix.m[3][2] =
-		rotateMatrix.m[3][3] =
+	rotateMatrix.m[2][0] = axis.z * axis.y * (1.0f - cos) + axis.x * sin;
+	rotateMatrix.m[2][1] = axis.z * axis.x * (1.0f - cos) - axis.y * sin;
+	rotateMatrix.m[2][2] = axis.z * axis.z * (1.0f - cos) + cos;
+	rotateMatrix.m[2][3] = 0.0f;
 
-		return rotateMatrix;
+	rotateMatrix.m[3][0] = 0.0f;
+	rotateMatrix.m[3][1] = 0.0f;
+	rotateMatrix.m[3][2] = 0.0f;
+	rotateMatrix.m[3][3] = 1.0f;
+
+	return rotateMatrix;
 }
+
 
 static const int kRowHeight = 20;
 static const int kColumnWidth = 60;
