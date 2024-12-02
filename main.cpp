@@ -42,26 +42,28 @@ void QuaternionScreenPrintf(int x, int y, const Quaternion& quaternion, const ch
 
 // 球面線形補間 (Slerp) 関数の実装例
 Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t) {
-    // 内積を計算
+    // q0とq1の内積
     float dot = q0.x * q1.x + q0.y * q1.y + q0.z * q1.z + q0.w * q1.w;
 
-    // 内積が負の場合、クォータニオンを反転
+    // 内積が負の場合、もう片方の回転を利用する
     Quaternion q1Adjusted = q1;
     if (dot < 0.0f) {
-        dot = -dot;
+        dot = -dot;           // 内積も反転
         q1Adjusted.x = -q1.x;
         q1Adjusted.y = -q1.y;
         q1Adjusted.z = -q1.z;
         q1Adjusted.w = -q1.w;
     }
 
-    // クォータニオンの補間
-    float theta = acos(dot);
-    float sinTheta = sin(theta);
+    // なす角を求める
+    float theta = std::acos(dot);
 
-    float scale0 = sin((1.0f - t) * theta) / sinTheta;
-    float scale1 = sin(t * theta) / sinTheta;
+    // thetaとsinを使って補間係数scale0, scale1を求める
+    float sinTheta = std::sin(theta);
+    float scale0 = std::sin((1.0f - t) * theta) / sinTheta;
+    float scale1 = std::sin(t * theta) / sinTheta;
 
+    // それぞれの補間係数を利用して補間後のQuaternionを求める
     return {
         scale0 * q0.x + scale1 * q1Adjusted.x,
         scale0 * q0.y + scale1 * q1Adjusted.y,
@@ -69,6 +71,7 @@ Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t) {
         scale0 * q0.w + scale1 * q1Adjusted.w
     };
 }
+
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
